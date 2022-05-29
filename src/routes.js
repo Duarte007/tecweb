@@ -1,16 +1,17 @@
 const { Router } = require("express");
 
 const ProductsController = require("./controllers/Products.controller");
+const AuthMiddleware = require("./middlewares/auth")
 
 const routes = Router();
 
 routes.post("/ping", (req, res) => {
-  return res.status(200).send("pong!");
+    return res.status(200).send("pong!");
 });
 
 routes.post("/authenticate", AuthMiddleware.generateToken);
 
-routes.use(AuthMiddleware.verifyMiddleware);
+// routes.use(AuthMiddleware.verifyMiddleware);
 
 routes.get("/products", ProductsController.getAll);
 routes.get("/products/:id", ProductsController.getById);

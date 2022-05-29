@@ -1,49 +1,59 @@
+const { connection } = require("../configs/database")
+
 class ProductsRepository {
 
-    productsList = {
-        products: [
-            { id: 1, name: 'Toddy', price: 12 },
-            { id: 2, name: 'Nescau', price: 9 },
-            { id: 3, name: 'Ovomaltine', price: 15 },
-        ]
+    getAll = async() => {
+        return connection.select('*').from('produto')
+            .then(produtos => produtos)
+            .catch(err => {
+                throw new Error({
+                    message: 'Erro ao recuperar produtos - ' + err.message
+                })
+            })
     }
 
-    getAll = () => {
-        return this.productsList.products
+    getById = async(id) => {
+        return connection.select('*').from('produto').where({ id })
+            .then(produto => produto[0])
+            .catch(err => {
+                throw new Error({
+                    message: 'Erro ao recuperar produto - ' + err.message
+                })
+            })
     }
 
-    getById = (id) => {
-        return this.productsList.products.find(product => product.id === id)
+    create = async(product) => {
+        return connection('produto')
+            .insert(product, ['id'])
+            .catch(err => {
+                throw new Error({
+                    message: 'Erro ao cadastrar produto - ' + err.message
+                })
+            })
     }
 
-    create = (product) => {
-        const ids = this.productsList.products.map(product => product.id)
-
-        const maxId = Math.max(...ids)
-
-        const newProduct = {
-            id: maxId + 1,
-            ...product
-        }
-
-        this.productsList.products.push(newProduct)
-
-        return newProduct
+    update = async(id, productUpdates) => {
+        return connection('produto')
+            .where('id', id)
+            .update({...productUpdates })
+            .catch(err => {
+                return Promise.reject({
+                    message: 'Erro ao atualizar produto - ' + err.message
+                })
+            })
     }
 
-    update = (id, productUpdates) => {
-        const index = this.productsList.products.findIndex(product => product.id === id)
-        this.productsList.products[index] = {
-            ...this.productsList.products[index],
-            ...productUpdates
-        }
-        return this.productsList.products[index]
+    delete = async(id) => {
+        return connection('produto')
+            .where('id', id)
+            .del()
+            .catch(err => {
+                throw new Error({
+                    message: 'Erro ao deletar produto - ' + err.message
+                })
+            })
     }
 
-    delete = (id) => {
-        const index = this.productsList.products.findIndex(product => product.id === id)
-        this.productsList.products.splice(index, 1)
-    }
 }
 
 module.exports = new ProductsRepository()

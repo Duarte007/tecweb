@@ -1,12 +1,12 @@
 const ProductsRepository = require("../repositories/Products.repository")
 
 class ProductsService {
-    getAll = () => {
+    getAll = async() => {
         return ProductsRepository.getAll()
     }
 
-    getById = (id) => {
-        const product = ProductsRepository.getById(id)
+    getById = async(id) => {
+        const product = await ProductsRepository.getById(id)
 
         if (!product) {
             throw { status: 404, error: 'PRODUCT_NOT_FOUND' }
@@ -15,34 +15,43 @@ class ProductsService {
         return product
     }
 
-    create = (product) => {
-        if (!product.name) {
-            throw { status: 400, error: 'INVALID_DATA', message: 'Product without name' }
+    create = async(product) => {
+        if (!product.descricao) {
+            throw { status: 400, error: 'INVALID_DATA', message: 'Product without description' }
         }
 
-        if (!product.price) {
+        if (!product.valor) {
             throw { status: 400, error: 'INVALID_DATA', message: 'Product without price' }
         }
 
         return ProductsRepository.create(product)
     }
 
-    update = (id, productUpdates) => {
-        this.getById(id)
+    update = async(id, productUpdates) => {
+        try {
 
-        if (!productUpdates.name) {
-            throw { status: 400, error: 'INVALID_DATA', message: 'Product without name' }
+            await this.getById(id)
+
+            if (!productUpdates.descricao) {
+                throw { status: 400, error: 'INVALID_DATA', message: 'Product without description' }
+            }
+
+            if (!productUpdates.valor) {
+                throw { status: 400, error: 'INVALID_DATA', message: 'Product without price' }
+            }
+
+            console.log({ productUpdates })
+
+            return ProductsRepository.update(id, productUpdates)
+        } catch (error) {
+            console.log("!A")
+            console.log({ error })
+            throw new Error(error)
         }
-
-        if (!productUpdates.price) {
-            throw { status: 400, error: 'INVALID_DATA', message: 'Product without price' }
-        }
-
-        return ProductsRepository.update(id, productUpdates)
     }
 
-    delete = (id) => {
-        this.getById(id)
+    delete = async(id) => {
+        await this.getById(id)
         return ProductsRepository.delete(id)
     }
 }
