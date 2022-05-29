@@ -1,15 +1,21 @@
-var jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+const UsersService = require('../services/Users.service')
+const bcrypt = require('bcryptjs')
 
 // @TODO: create auth var, create User repository
 class AuthMiddleware {
-    async verifyMiddleware(req, res, next) {
+    async checkToken(req, res, next) {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             return res.status(401).json({ msg: "Token não fornecido!" });
+        } else {
+            let token = authHeader.split(' ')[1]
+            req.token = token
         }
 
         try {
-            const decoded = jwt.verify(authHeader, auth.secret);
+            const decoded = jwt.verify(req.token, process.env.SECRET_KEY);
+
             req.userId = decoded.id;
 
             return next();
@@ -18,18 +24,19 @@ class AuthMiddleware {
         }
     }
     generateToken = async(req, res) => {
-        if (req.body.user && req.body.password) {
-            const user = await User.getUserInfo(req.body);
-            if (!user[0]) {
-                return res.status(401).json({ error: "Usuário ou senha inválidos!" });
+        if (req.body.login && req.body.senha) {
+            const user = await UsersService.findByLogin(req.body.login);
+            const { id, senha } = user;
+
+            let checkSenha = bcrypt.compareSync(req.body.senha, senha)
+
+            if (checkSenha) {
+                let token;
+                token = jwt.sign({ id }, process.env.SECRET_KEY, {
+                    expiresIn: 3600,
+                });
+                return res.status(200).json({ auth: true, ...user, token });
             }
-            const { id } = user[0];
-            const { secret, ttl } = auth;
-            let token;
-            token = jwt.sign({ id }, secret, {
-                expiresIn: ttl,
-            });
-            return res.status(200).json({ auth: true, token: token });
         }
         return res.status(401).json({ error: "Usuário ou senha inválidos!" });
     };
