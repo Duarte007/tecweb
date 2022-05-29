@@ -1,0 +1,293 @@
+{
+	"info": {
+		"_postman_id": "3815137a-7e2c-4c9a-9bc9-6a94f4673e90",
+		"name": "Aula Node",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6965462"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"Duarte\",\n    \"senha\": \"duarte\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/authenticate",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "New User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Matheus Duarte\",\n    \"login\": \"Duarte\",\n    \"senha\": \"duarte\",\n    \"email\": \"duarte@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/user",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "New Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (responseCode.code === 200) {",
+									"    postman.setEnvironmentVariable(\"access-token\", postman.getResponseHeader('access-token'));",
+									"    postman.setEnvironmentVariable(\"client\", postman.getResponseHeader('client'));",
+									"    postman.setEnvironmentVariable(\"uid\", postman.getResponseHeader('uid'));",
+									"    ",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjUzODU4ODgwLCJleHAiOjE2NTM4NjI0ODB9.PnU80Oxt0hgRj9et1r1YaZcbNIcRG8RyDofbbXfMTUE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\": \"Produto do Duarte 2\",\n    \"valor\": \"8000.29\",\n    \"marca\": \"Duarte\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/products",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/products/:id",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/products",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjUzODU4ODgwLCJleHAiOjE2NTM4NjI0ODB9.PnU80Oxt0hgRj9et1r1YaZcbNIcRG8RyDofbbXfMTUE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\": \"Produto do Duarte 2\",\n    \"valor\": \"9000.29\",\n    \"marca\": \"Duarte\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/products/9",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjUzODU4ODgwLCJleHAiOjE2NTM4NjI0ODB9.PnU80Oxt0hgRj9et1r1YaZcbNIcRG8RyDofbbXfMTUE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://aula-node.herokuapp.com/products/4",
+							"protocol": "https",
+							"host": [
+								"aula-node",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"products",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ping",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://aula-node.herokuapp.com/ping",
+					"protocol": "https",
+					"host": [
+						"aula-node",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
