@@ -14,10 +14,11 @@ routes.post("/user", UsersController.create);
 
 routes.post("/authenticate", AuthMiddleware.generateToken);
 
-routes.use(AuthMiddleware.checkToken);
-
 routes.get("/products", ProductsController.getAll);
 routes.get("/products/:id", ProductsController.getById);
+
+routes.use(AuthMiddleware.checkToken);
+
 routes.post("/products", ProductsController.create);
 routes.put("/products/:id", ProductsController.update);
 routes.delete("/products/:id", ProductsController.delete);
